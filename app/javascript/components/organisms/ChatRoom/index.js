@@ -1,98 +1,77 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-import { Message } from 'components';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-class Chatroom extends React.Component {
+import { Message } from 'components'
+
+import { submitMessage, getMessages } from '../../../actions'
+
+class ChatRoom extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
+        this.state = {message: ''}
+        this.handleMessageChange = this.handleMessageChange.bind(this)
+        this.submitMessage = this.submitMessage.bind(this)
+    }
 
-        this.state = {
-            chats: [{
-                username: "Kevin Hsu",
-                content: <p>Hello World!</p>,
-                img: "http://i.imgur.com/Tj5DGiO.jpg",
-            }, {
-                username: "Alice Chen",
-                content: <p>Love it! :heart:</p>,
-                img: "http://i.imgur.com/Tj5DGiO.jpg",
-            }, {
-                username: "Kevin Hsu",
-                content: <p>Check out my Github at https://github.com/WigoHunter</p>,
-                img: "http://i.imgur.com/Tj5DGiO.jpg",
-            }, {
-                username: "KevHs",
-                content: <p>Lorem ipsum dolor sit amet, nibh ipsum. Cum class sem inceptos incidunt sed sed. Tempus wisi enim id, arcu sed lectus aliquam, nulla vitae est bibendum molestie elit risus.</p>,
-                img: "http://i.imgur.com/ARbQZix.jpg",
-            }, {
-                username: "Kevin Hsu",
-                content: <p>So</p>,
-                img: "http://i.imgur.com/Tj5DGiO.jpg",
-            }, {
-                username: "Kevin Hsu",
-                content: <p>Chilltime is going to be an app for you to view videos with friends</p>,
-                img: "http://i.imgur.com/Tj5DGiO.jpg",
-            }, {
-                username: "Kevin Hsu",
-                content: <p>You can sign-up now to try out our private beta!</p>,
-                img: "http://i.imgur.com/Tj5DGiO.jpg",
-            }, {
-                username: "Alice Chen",
-                content: <p>Definitely! Sounds great!</p>,
-                img: "http://i.imgur.com/Tj5DGiO.jpg",
-            }]
-        };
+    handleMessageChange(e) {
+        this.setState({message: e.target.value})
+    }
 
-        this.submitMessage = this.submitMessage.bind(this);
+    componentWillMount() {
+        this.props.getMessages()
     }
 
     componentDidMount() {
-        this.scrollToBot();
+        this.scrollToBot()
     }
 
     componentDidUpdate() {
-        this.scrollToBot();
+        this.scrollToBot()
     }
 
     scrollToBot() {
-        ReactDOM.findDOMNode(this.refs.chats).scrollTop = ReactDOM.findDOMNode(this.refs.chats).scrollHeight;
+        ReactDOM.findDOMNode(this.refs.chats).scrollTop = ReactDOM.findDOMNode(this.refs.chats).scrollHeight
     }
 
     submitMessage(e) {
-        e.preventDefault();
-
-        this.setState({
-            chats: this.state.chats.concat([{
+        e.preventDefault()
+        this.props.submitMessage({
                 username: "Kevin Hsu",
-                content: <p>{ReactDOM.findDOMNode(this.refs.msg).value}</p>,
+                content: this.state.message,
                 img: "http://i.imgur.com/Tj5DGiO.jpg",
-            }])
-        }, () => {
-            ReactDOM.findDOMNode(this.refs.msg).value = "";
-        });
+            })
+        this.setState({message: ''})
     }
 
     render() {
-        const username = "Kevin Hsu";
-        const { chats } = this.state;
+        const username = "Kevin Hsu"
+        const { messages } = this.props
 
         return (
             <div className="chatroom">
                 <h3>Chilltime</h3>
                 <ul className="chats" ref="chats">
-                    {
-                        chats.map((chat) =>
-                            <Message chat={chat} user={username} />
-                        )
-                    }
+                    { messages.map((chat) => <Message chat={chat} user={username} /> ) }
                 </ul>
                 <form className="input" onSubmit={(e) => this.submitMessage(e)}>
-                    <input type="text" ref="msg" />
+                    <input type="text" value={this.state.message} onChange={this.handleMessageChange} />
                     <input type="submit" value="Submit" />
                 </form>
             </div>
-        );
+        )
     }
 }
 
-export default Chatroom;
+const mapStateToProps = state => ({ messages: state.messages })
+
+const mapDispatchToProps = dispatch => ({
+  submitMessage: bindActionCreators(submitMessage, dispatch),
+  getMessages: bindActionCreators(getMessages, dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatRoom)
+
