@@ -1,5 +1,6 @@
 import * as types from '../constants/ActionTypes'
 import Api from '../api.js'
+import { sendMessage, setCallback } from '../cable'
 
 export function getMessages() {
   return dispatch => {
@@ -13,5 +14,17 @@ export function getMessages() {
 }
 
 export function submitMessage(message) {
+  sendMessage(message)
   return { type: types.SUBMIT_MESSAGE, payload: message }
 }
+
+function recieveMessage(message) {
+  return dispatch => {
+    dispatch({ type: types.RECIEVE_MESSAGE, payload: message })
+  }
+}
+
+setCallback(message => {
+  console.log(message)
+  recieveMessage(message)
+})

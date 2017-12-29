@@ -7,6 +7,8 @@ export default function appState(state = initialState, action) {
       return  {...state, messages: action.payload}
     case types.SUBMIT_MESSAGE:
       return {...state, messages: state.messages.concat(action.payload)}
+    case types.RECIEVE_MESSAGE:
+      return {...state, messages: state.messages.concat(action.payload)}
   }
   return initialState
 }
