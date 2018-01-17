@@ -1,7 +1,13 @@
 import React from 'react'
 import { ChatList, ChatRoom } from 'components'
-export default () => {
-  return (
-    <div> <ChatList /> <ChatRoom /> </div>
+
+class ChatPage extends React.Component {
+  render() {
+    return (
+      <div> <ChatList /> <ChatRoom /> </div>
     )
+  }
 }
+
+
+export default ChatPage

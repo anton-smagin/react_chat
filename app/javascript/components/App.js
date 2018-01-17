@@ -4,18 +4,27 @@ import { ChatPage } from 'components'
 import { Provider } from 'react-redux'
 import configureStore from '../store/configureStore'
 import { injectGlobal } from 'styled-components'
+import { recieveMessage } from '../actions'
 
+import { setCallback as messageRecieved } from '../cable'
 const store = configureStore()
 
-const App = () => {
-  return (
-    <Provider store={store}>
-      <ChatPage />
-    </Provider>
-  )
-}
+export default class App extends React.Component {
 
-export default App
+  componentWillMount() {
+    messageRecieved((message) => {
+      return store.dispatch(recieveMessage(message));
+    })
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <ChatPage />
+      </Provider>
+    )
+  }
+}
 
 injectGlobal `
 @import url('https://fonts.googleapis.com/css?family=Open+Sans|Pacifico');

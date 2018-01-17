@@ -18,13 +18,8 @@ export function submitMessage(message) {
   return { type: types.SUBMIT_MESSAGE, payload: message }
 }
 
-function recieveMessage(message) {
+export function recieveMessage(message) {
   return dispatch => {
     dispatch({ type: types.RECIEVE_MESSAGE, payload: message })
   }
 }
-
-setCallback(message => {
-  console.log(message)
-  recieveMessage(message)
-})

@@ -55,7 +55,7 @@ class ChatRoom extends React.Component {
             <div className="chatroom">
                 <h3>Chilltime</h3>
                 <ul className="chats" ref="chats">
-                    { messages.map((chat) => <Message chat={chat} user={username} /> ) }
+                    { messages.map((chat, i) => <Message chat={chat} user={username} key={i} /> ) }
                 </ul>
                 <form className="input" onSubmit={(e) => this.submitMessage(e)}>
                     <input type="text" value={this.state.message} onChange={this.handleMessageChange} />

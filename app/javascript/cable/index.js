@@ -1,7 +1,7 @@
-import cable from "actioncable";
+import cable from "actioncable"
 
 let consumer,
-    callback;
+    callback
 
 export function createChannel(...args) {
   if (!consumer) {
